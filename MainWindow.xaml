@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ArduinoDOJO"
         mc:Ignorable="d"
-        Title="MainWindow" Background="LightGray" Height="450" Width="800">
+        Title="A-Mazing DOJO Trainer (c) 2025" Background="LightGray" Height="450" Width="800">
     <Grid Margin="10">
         <!-- Buttons on the left -->
         <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="10">
@@ -20,10 +20,10 @@
             <!-- Input Layer Slider -->
             <StackPanel Orientation="Vertical" Width="150" HorizontalAlignment="Center">
                 <TextBlock Text="Input Layer (Params)" HorizontalAlignment="Center"/>
-                <Slider Name="InputSlider" Width="150" Minimum="0" Maximum="7" Value="1" TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,5,0,0" ValueChanged="InputSlider_ValueChanged"/>
+                <Slider Name="InputSlider" Width="150" Minimum="0" Maximum="7" Value="7" TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,5,0,0" ValueChanged="InputSlider_ValueChanged"/>
                 <Grid Height="15">
                     <TextBlock Text="0" HorizontalAlignment="Left"/>
-                    <TextBlock Name="TB_InputCurrent" Text="1" HorizontalAlignment="Center"/>
+                    <TextBlock Name="TB_InputCurrent" Text="7" HorizontalAlignment="Center"/>
                     <TextBlock Text="7" HorizontalAlignment="Right"/>
                 </Grid>
             </StackPanel>
@@ -31,10 +31,10 @@
             <!-- Hidden Layer Slider -->
             <StackPanel Orientation="Vertical" Width="150" HorizontalAlignment="Center" Margin="30,0,0,0">
                 <TextBlock Text="Hidden Layer (Nodes)" HorizontalAlignment="Center"/>
-                <Slider Name="HiddenSlider" Width="150" Minimum="0" Maximum="20" Value="7" TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,5,0,0" ValueChanged="HiddenSlider_ValueChanged"/>
+                <Slider Name="HiddenSlider" Width="150" Minimum="0" Maximum="20" Value="20" TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,5,0,0" ValueChanged="HiddenSlider_ValueChanged"/>
                 <Grid Height="15">
                     <TextBlock Text="0" HorizontalAlignment="Left"/>
-                    <TextBlock Name="TB_HiddenCurrent" Text="7" HorizontalAlignment="Center"/>
+                    <TextBlock Name="TB_HiddenCurrent" Text="20" HorizontalAlignment="Center"/>
                     <TextBlock Text="20" HorizontalAlignment="Right"/>
                 </Grid>
             </StackPanel>
@@ -42,17 +42,29 @@
             <!-- Nodes Slider -->
             <StackPanel Orientation="Vertical" Width="150" HorizontalAlignment="Center" Margin="30,0,0,0">
                 <TextBlock Text="Learning Rate" HorizontalAlignment="Center"/>
-                <Slider Name="LearningRateSlider" Width="150" Minimum="0.001" Maximum="1" Value="0.001" TickFrequency="0.001" IsSnapToTickEnabled="True" Margin="0,5,0,0" ValueChanged="LearningRateSlider_ValueChanged"/>
+                <Slider Name="LearningRateSlider" Width="150" Minimum="0.001" Maximum="1" Value="1" TickFrequency="0.001" IsSnapToTickEnabled="True" Margin="0,5,0,0" ValueChanged="LearningRateSlider_ValueChanged"/>
                 <Grid Height="15">
-                    <TextBlock Text="0" HorizontalAlignment="Left"/>
-                    <TextBlock Name="TB_LearningRateCurrent" Text="0.001" HorizontalAlignment="Center"/>
-                    <TextBlock Text="0.01" HorizontalAlignment="Right"/>
+                    <TextBlock Text="0.001" HorizontalAlignment="Left"/>
+                    <TextBlock Name="TB_LearningRateCurrent" Text="1" HorizontalAlignment="Center"/>
+                    <TextBlock Text="1" HorizontalAlignment="Right"/>
                 </Grid>
             </StackPanel>
         </StackPanel>
 
         <!-- Circular shape in the center -->
-
+        <!-- Epoch display at the bottom -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,-15,0,0">
+            <!-- Input Layer Slider -->
+            <StackPanel Orientation="Vertical" Width="150" HorizontalAlignment="Center">
+                <TextBlock Text="Epochs" HorizontalAlignment="Center"/>
+                <Slider Name="EpochSlider" Width="150" Minimum="0" Maximum="200000" Value="200000" TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,5,0,0" ValueChanged="EpochSlider_ValueChanged"/>
+                <Grid Height="15">
+                    <TextBlock Text="0" HorizontalAlignment="Left"/>
+                    <TextBlock Name="TB_EpochCurrent" Text="200000" HorizontalAlignment="Center"/>
+                    <TextBlock Text="200000" HorizontalAlignment="Right"/>
+                </Grid>
+            </StackPanel>
+        </StackPanel>
         <!-- Data display below -->
         <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10,0,10,10">
             <Grid.ColumnDefinitions>
@@ -63,17 +75,17 @@
             <!-- Training Data -->
             <StackPanel HorizontalAlignment="Left" Grid.Column="0">
                 <TextBlock Text="Training" FontWeight="Bold" HorizontalAlignment="Left" Margin="5,0,0,5"/>
-                <DataGrid x:Name="TrainingGrid" Height="150">
+                <DataGrid x:Name="TrainingGrid" Height="150" AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="#" Binding="{Binding id}" IsReadOnly="True" CanUserResize="False" Width="auto"/>
-                        <DataGridTextColumn Header="x" Binding="{Binding x}" IsReadOnly="True" Width="*"/>
-                        <DataGridTextColumn Header="y" Binding="{Binding y}" IsReadOnly="True" Width="*"/>
-                        <DataGridTextColumn Header="esc" Binding="{Binding esc}" IsReadOnly="True" Width="*"/>
-                        <DataGridTextColumn Header="up" Binding="{Binding up}" IsReadOnly="True" Width="*"/>
-                        <DataGridTextColumn Header="down" Binding="{Binding down}" IsReadOnly="True" Width="*"/>
-                        <DataGridTextColumn Header="right" Binding="{Binding right}" IsReadOnly="True" Width="*"/>
-                        <DataGridTextColumn Header="left" Binding="{Binding left}" IsReadOnly="True" Width="*"/>
-                        <DataGridTextColumn Header="tag" Binding="{Binding tag}" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" Width="Auto" />
+                        <DataGridTextColumn Header="X" Binding="{Binding X}" IsReadOnly="True" Width="*" />
+                        <DataGridTextColumn Header="Y" Binding="{Binding Y}" IsReadOnly="True" Width="*" />
+                        <DataGridTextColumn Header="Esc" Binding="{Binding Esc}" IsReadOnly="True" Width="*" />
+                        <DataGridTextColumn Header="Up" Binding="{Binding Up}" IsReadOnly="True" Width="*" />
+                        <DataGridTextColumn Header="Down" Binding="{Binding Down}" IsReadOnly="True" Width="*" />
+                        <DataGridTextColumn Header="Right" Binding="{Binding Right}" IsReadOnly="True" Width="*" />
+                        <DataGridTextColumn Header="Left" Binding="{Binding Left}" IsReadOnly="True" Width="*" />
+                        <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" IsReadOnly="True" Width="*" />
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>
@@ -81,23 +93,20 @@
             <!-- Prediction Data -->
             <StackPanel HorizontalAlignment="Right" Grid.Column="1">
                 <TextBlock Text="Predict" FontWeight="Bold" HorizontalAlignment="Left" Margin="5,0,0,5"/>
-                <DataGrid x:Name="PredictGrid" Height="150">
+                <DataGrid x:Name="PredictGrid" Height="150" AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="#" Binding="{Binding id}" IsReadOnly="True" CanUserResize="False" Width="auto"/>
-                        <DataGridTextColumn Header="x" Binding="{Binding x}" IsReadOnly="True" Width="*"/>
-                        <DataGridTextColumn Header="y" Binding="{Binding y}" IsReadOnly="True" Width="*"/>
-                        <DataGridTextColumn Header="esc" Binding="{Binding esc}" IsReadOnly="True" Width="*"/>
-                        <DataGridTextColumn Header="up" Binding="{Binding up}" IsReadOnly="True" Width="*"/>
-                        <DataGridTextColumn Header="down" Binding="{Binding down}" IsReadOnly="True" Width="*"/>
-                        <DataGridTextColumn Header="right" Binding="{Binding right}" IsReadOnly="True" Width="*"/>
-                        <DataGridTextColumn Header="left" Binding="{Binding left}" IsReadOnly="True" Width="*"/>
-                        <DataGridTextColumn Header="tag" Binding="{Binding tag}" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" Width="Auto" />
+                        <DataGridTextColumn Header="X" Binding="{Binding X}" IsReadOnly="True" Width="*" />
+                        <DataGridTextColumn Header="Y" Binding="{Binding Y}" IsReadOnly="True" Width="*" />
+                        <DataGridTextColumn Header="Esc" Binding="{Binding Esc}" IsReadOnly="True" Width="*" />
+                        <DataGridTextColumn Header="Up" Binding="{Binding Up}" IsReadOnly="True" Width="*" />
+                        <DataGridTextColumn Header="Down" Binding="{Binding Down}" IsReadOnly="True" Width="*" />
+                        <DataGridTextColumn Header="Right" Binding="{Binding Right}" IsReadOnly="True" Width="*" />
+                        <DataGridTextColumn Header="Left" Binding="{Binding Left}" IsReadOnly="True" Width="*" />
+                        <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" IsReadOnly="True" Width="*" />
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>
         </Grid>
-
-        <!-- Epoch display at the bottom -->
-        <TextBlock Text="Epochs: 400000" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12,0,0,0"/>
     </Grid>
 </Window>

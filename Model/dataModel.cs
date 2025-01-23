@@ -8,15 +8,16 @@ namespace ArduinoDOJO.Model
 {
     public class dataModel
     {
-        public int id { get; set; }
-        public int x { get; set; }
-        public int y { get; set; }
-        public int esc { get; set; }
-        public int up { get; set; }
-        public int down { get; set; }
-        public int left { get; set; }
-        public int right { get; set; }
-        public int tag { get; set; }
+        public int Id { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Esc { get; set; }
+        public int Up { get; set; }
+        public int Down { get; set; }
+        public int Right { get; set; }
+        public int Left { get; set; }
+        public double Tag { get; set; }
+        
 
     }
 }
