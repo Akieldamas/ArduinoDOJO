@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ArduinoDOJO.Model
 {
-    public class dataModel
+    public class DataModel
     {
         public int Id { get; set; }
         public int X { get; set; }
