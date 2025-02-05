@@ -111,7 +111,6 @@ namespace ArduinoDOJO
             HIDDEN_SIZE = (int)HiddenSlider.Value;
             LEARNING_RATE = (double)LearningRateSlider.Value;
             EPOCH = (int)EpochSlider.Value;
-            OUTPUT_SIZE = 1; // on ne veut que "left right down up"
 
             IAModel iaModel = AIController.Training(matrixX, matrixY, INPUT_SIZE, HIDDEN_SIZE, EPOCH, OUTPUT_SIZE, LEARNING_RATE);
             TrainingGrid.ItemsSource = iaModel.dataModel;
