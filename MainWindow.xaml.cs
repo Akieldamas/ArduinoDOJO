@@ -12,6 +12,11 @@ using System.Windows.Shapes;
 using System.Diagnostics;
 using ArduinoDOJO.Model;
 using System.Data;
+using Newtonsoft.Json;
+using System.Windows.Media.Media3D;
+using System.Xml.Linq;
+using System.Globalization;
+using SpreadsheetGear;
 
 namespace ArduinoDOJO
 {
@@ -21,57 +26,20 @@ namespace ArduinoDOJO
     public partial class MainWindow : Window
     {
         MatrixController matrixController;
+        SQLController sQLController;
 
         double[,] GLOBALweight_ih;
         double[,] GLOBALweight_ho;
         int INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE, EPOCH;
         double LEARNING_RATE;
 
-        int[,] matrixX = new int[,]
-            {
-                {  1,  0,  0, 1, 1, 0, 0 },
-                { -1,  0,  0, 1, 1, 0, 0 },
-                {  0,  1,  0, 0, 0, 1, 1 },
-                {  0, -1,  0, 0, 0, 1, 1 },
-                {  1,  0,  0, 0, 1, 1, 0 },
-                {  0, -1,  0, 0, 1, 1, 0 },
-                {  0, -1,  0, 0, 1, 0, 1 },
-                { -1,  0,  0, 0, 1, 0, 1 },
-                {  1,  0,  0, 1, 0, 1, 0 },
-                {  0,  1,  0, 1, 0, 1, 0 },
-                {  0,  1,  0, 1, 0, 1, 1 },
-                {  0,  0,  0, 1, 1, 1, 1 },
-                {  0, -1,  0, 0, 1, 1, 1 },
-                { -1,  0,  0, 1, 0, 0, 1 },
-                {  0,  1,  0, 1, 0, 0, 1 },
-                {  1,  0,  0, 1, 0, 0, 1 }
-            };
-
-        double[,] matrixY = new double[,]
-            {
-                { 0.25 },
-                { 0.75 },
-                { 1.0  },
-                { 0.5  },
-                { 1.0  },
-                { 0.75 },
-                { 0.25 },
-                { 1.0  },
-                { 0.5  },
-                { 0.75 },
-                { 0.5  },
-                { 0.0  },
-                { 1.0  },
-                { 0.5  },
-                { 0.25 },
-                { 0.25 }
-            };
-
+        List<(object[,], object[,])> matrix = new List<(object[,], object[,])>();
 
         public MainWindow()
         {
             InitializeComponent();
             matrixController = new MatrixController();
+            sQLController = new SQLController();
         }
         private void InputSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -87,7 +55,6 @@ namespace ArduinoDOJO
                 TB_HiddenCurrent.Text = HiddenSlider.Value.ToString();
             }
         }
-        
         private void LearningRateSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (TB_LearningRateCurrent != null)
@@ -102,7 +69,7 @@ namespace ArduinoDOJO
                 TB_EpochCurrent.Text = EpochSlider.Value.ToString();
             }
         }
-        private void BTN_Train_Click(object sender, RoutedEventArgs e)
+        private async void BTN_Train_Click(object sender, RoutedEventArgs e)
         {
             BTN_Predict.IsEnabled = true;
             BTN_Save.IsEnabled = true;
@@ -110,31 +77,122 @@ namespace ArduinoDOJO
             INPUT_SIZE = (int)InputSlider.Value;
             HIDDEN_SIZE = (int)HiddenSlider.Value;
             LEARNING_RATE = (double)LearningRateSlider.Value;
+            OUTPUT_SIZE = 1;
             EPOCH = (int)EpochSlider.Value;
 
-            IAModel iaModel = AIController.Training(matrixX, matrixY, INPUT_SIZE, HIDDEN_SIZE, EPOCH, OUTPUT_SIZE, LEARNING_RATE);
-            TrainingGrid.ItemsSource = iaModel.dataModel;
+            if (CB_mode.IsChecked == false)
+            {
+                matrix = await sQLController.LoadTraningDataFromExcelFile();
+            }
+            else
+            {
+                matrix = await sQLController.getEntrainement();
+            }
+
+            TrainingGrid.ItemsSource = null;
+            TrainingGrid.Items.Clear();
+            List<DataModel> dataList = new List<DataModel>();
+
+            for (int j = 0; j < matrix[0].Item1.GetLength(0); j++)
+            {
+                dataList.Add(new DataModel
+                {
+                    X = Convert.ToInt32(matrix[0].Item1[j, 0]),
+                    Y = Convert.ToInt32(matrix[0].Item1[j, 1]),
+                    Esc = Convert.ToInt32(matrix[0].Item1[j, 2]),
+                    Up = Convert.ToInt32(matrix[0].Item1[j, 3]),
+                    Down = Convert.ToInt32(matrix[0].Item1[j, 4]),
+                    Right = Convert.ToInt32(matrix[0].Item1[j, 5]),
+                    Left = Convert.ToInt32(matrix[0].Item1[j, 6]),
+                });
+            }
+
+            IAModel iaModel = AIController.Training(matrix[0].Item1, matrix[0].Item2, INPUT_SIZE, HIDDEN_SIZE, EPOCH, OUTPUT_SIZE, LEARNING_RATE);
+
             GLOBALweight_ho = iaModel.weights_ho;
             GLOBALweight_ih = iaModel.weights_ih;
+            
+            List<DataModel> emptyData = new List<DataModel>();
+
+            for (int i = 0; i < matrix[0].Item1.GetLength(0); i++)
+            {
+                emptyData.Add(new DataModel
+                {
+                    Id = i + 1,
+                    X = 0,
+                    Y = 0,
+                    Esc = 0,
+                    Up = 0,
+                    Down = 0,
+                    Right = 0,
+                    Left = 0,
+                    Tag = 0
+                });
+            }   
+
+            TrainingGrid.ItemsSource = null;
+            TrainingGrid.Items.Clear();
+            TrainingGrid.ItemsSource = emptyData;
         }
+
         private void BTN_Predict_Click(object sender, RoutedEventArgs e)
         {
-            List<DataModel> predictDataList = AIController.Predict(matrixX, INPUT_SIZE, HIDDEN_SIZE, GLOBALweight_ih, GLOBALweight_ho);
 
+            int rowCount = TrainingGrid.Items.Count;
+            int columnCount = TrainingGrid.Columns.Count;
+
+            object[,] trainingMatrix = new object[rowCount, columnCount];
+
+            for (int i = 0; i < rowCount; i++)
+            {
+                var row = TrainingGrid.Items[i];
+                for (int j = 0; j < columnCount; j++)
+                {
+                    var cellContent = TrainingGrid.Columns[j].GetCellContent(row);
+
+                    if (cellContent is TextBlock textBlock)
+                    {
+                        trainingMatrix[i, j] = textBlock.Text;
+                    }
+                    else
+                    {
+                        trainingMatrix[i, j] = cellContent?.ToString();
+                    }
+                }
+            }
+            List<DataModel> predictDataList = AIController.Predict(trainingMatrix, INPUT_SIZE, HIDDEN_SIZE, GLOBALweight_ih, GLOBALweight_ho);
+            PredictGrid.ItemsSource = null;
+            PredictGrid.Items.Clear();
             PredictGrid.ItemsSource = predictDataList;
         }
         private void BTN_Load_Click(object sender, RoutedEventArgs e)
         {
             BTN_Load.IsEnabled = true;
 
+
+
+          //  List<> sQLController.LoadWeightsFromDB();
+
         }
 
         private void BTN_Save_Click(object sender, RoutedEventArgs e)
         {
-            // save hidden
-            //for (int )
-            
+            DateTime date = DateTime.Now;
+            string formattedDate = date.ToString("yyyy-MM-dd_HH:mm:ss");
+            MessageBox.Show(formattedDate);
+            var weights_ihConvert = JsonConvert.SerializeObject(GLOBALweight_ih);
+            var weights_hoConvert = JsonConvert.SerializeObject(GLOBALweight_ho);
+            var data = new
+            {
+                model_name = $"Model_{date}",
+                weights_ih = weights_ihConvert,
+                weights_ho = weights_hoConvert
+            };
 
+            TestBOx.Text = JsonConvert.SerializeObject(data);
+
+            var jsonData = JsonConvert.SerializeObject(data);
+            sQLController.SaveDataAsync($"Model_{date}", GLOBALweight_ih, GLOBALweight_ho);
         }
     }
 }

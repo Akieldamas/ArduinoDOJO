@@ -5,10 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ArduinoDOJO"
         mc:Ignorable="d"
-        Title="A-Mazing DOJO Trainer (c) 2025" Background="LightGray" Height="450" Width="800">
-    <Grid Margin="10">
+        Title="A-Mazing DOJO Trainer (c) 2025" Background="LightGray" Height="600" Width="800">
+    <Grid Margin="0,10,10,10" HorizontalAlignment="Right" Width="780">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="1.3*"/>
+        </Grid.RowDefinitions>
         <!-- Buttons on the left -->
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="10">
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="10,10,0,10" Grid.RowSpan="2">
             <Button x:Name="BTN_Train" IsEnabled="True" Content="Train" Width="100" Height="30" Margin="0,0,0,10" Click="BTN_Train_Click"/>
             <Button x:Name="BTN_Predict" IsEnabled="False" Content="Predict" Width="100" Height="30" Margin="0,0,0,10" Click="BTN_Predict_Click"/>
             <Button x:Name="BTN_Load" IsEnabled="True" Content="Load" Width="100" Height="30" Margin="0,0,0,10" Click="BTN_Load_Click"/>
@@ -16,7 +20,7 @@
         </StackPanel>
 
         <!-- Sliders and labels at the top -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="120,10,10,0">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="190,10,0,0">
             <!-- Input Layer Slider -->
             <StackPanel Orientation="Vertical" Width="150" HorizontalAlignment="Center">
                 <TextBlock Text="Input Layer (Params)" HorizontalAlignment="Center"/>
@@ -53,7 +57,7 @@
 
         <!-- Circular shape in the center -->
         <!-- Epoch display at the bottom -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,-15,0,0">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,173,0,0">
             <!-- Input Layer Slider -->
             <StackPanel Orientation="Vertical" Width="150" HorizontalAlignment="Center">
                 <TextBlock Text="Epochs" HorizontalAlignment="Center"/>
@@ -66,7 +70,7 @@
             </StackPanel>
         </StackPanel>
         <!-- Data display below -->
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10,0,10,10">
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -75,38 +79,37 @@
             <!-- Training Data -->
             <StackPanel HorizontalAlignment="Left" Grid.Column="0">
                 <TextBlock Text="Training" FontWeight="Bold" HorizontalAlignment="Left" Margin="5,0,0,5"/>
-                <DataGrid x:Name="TrainingGrid" Height="150" AutoGenerateColumns="False">
+                <DataGrid Margin="5,0,0,5" x:Name="TrainingGrid" Height="300" AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" Width="Auto" />
-                        <DataGridTextColumn Header="X" Binding="{Binding X}" IsReadOnly="True" Width="*" />
-                        <DataGridTextColumn Header="Y" Binding="{Binding Y}" IsReadOnly="True" Width="*" />
-                        <DataGridTextColumn Header="Esc" Binding="{Binding Esc}" IsReadOnly="True" Width="*" />
-                        <DataGridTextColumn Header="Up" Binding="{Binding Up}" IsReadOnly="True" Width="*" />
-                        <DataGridTextColumn Header="Down" Binding="{Binding Down}" IsReadOnly="True" Width="*" />
-                        <DataGridTextColumn Header="Right" Binding="{Binding Right}" IsReadOnly="True" Width="*" />
-                        <DataGridTextColumn Header="Left" Binding="{Binding Left}" IsReadOnly="True" Width="*" />
-                        <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" IsReadOnly="True" Width="*" />
+                        <DataGridTextColumn Header="X" Binding="{Binding X}" Width="*" />
+                        <DataGridTextColumn Header="Y" Binding="{Binding Y}" Width="*" />
+                        <DataGridTextColumn Header="Esc" Binding="{Binding Esc}" Width="*" />
+                        <DataGridTextColumn Header="Up" Binding="{Binding Up}" Width="*" />
+                        <DataGridTextColumn Header="Down" Binding="{Binding Down}" Width="*" />
+                        <DataGridTextColumn Header="Right" Binding="{Binding Right}" Width="*" />
+                        <DataGridTextColumn Header="Left" Binding="{Binding Left}" Width="*" />
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>
-
             <!-- Prediction Data -->
             <StackPanel HorizontalAlignment="Right" Grid.Column="1">
                 <TextBlock Text="Predict" FontWeight="Bold" HorizontalAlignment="Left" Margin="5,0,0,5"/>
-                <DataGrid x:Name="PredictGrid" Height="150" AutoGenerateColumns="False">
+                <DataGrid x:Name="PredictGrid" Margin="5,0,0,5" Height="300" AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" Width="Auto" />
-                        <DataGridTextColumn Header="X" Binding="{Binding X}" IsReadOnly="True" Width="*" />
-                        <DataGridTextColumn Header="Y" Binding="{Binding Y}" IsReadOnly="True" Width="*" />
-                        <DataGridTextColumn Header="Esc" Binding="{Binding Esc}" IsReadOnly="True" Width="*" />
-                        <DataGridTextColumn Header="Up" Binding="{Binding Up}" IsReadOnly="True" Width="*" />
-                        <DataGridTextColumn Header="Down" Binding="{Binding Down}" IsReadOnly="True" Width="*" />
-                        <DataGridTextColumn Header="Right" Binding="{Binding Right}" IsReadOnly="True" Width="*" />
-                        <DataGridTextColumn Header="Left" Binding="{Binding Left}" IsReadOnly="True" Width="*" />
-                        <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" IsReadOnly="True" Width="*" />
+                        <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Header="X" Binding="{Binding X}" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Header="Y" Binding="{Binding Y}" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Header="Esc" Binding="{Binding Esc}" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Header="Up" Binding="{Binding Up}" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Header="Down" Binding="{Binding Down}" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Header="Right" Binding="{Binding Left}" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Header="Left" Binding="{Binding Right}" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" IsReadOnly="True" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>
         </Grid>
+            <CheckBox x:Name="CB_mode" Content="Excel = false, DB = true" Height="50" Width="200"/>
+        <TextBox x:Name="TestBOx" HorizontalAlignment="Left" Margin="605,138,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
     </Grid>
 </Window>
