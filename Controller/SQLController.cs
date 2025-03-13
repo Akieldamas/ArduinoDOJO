@@ -64,6 +64,42 @@ namespace ArduinoDOJO.Controller
                 return null;
             }
         }
+
+        public async Task<List<string>> GetNomsModeles()
+        {
+
+            var response = await client.GetAsync("/getAllModelNames");
+            response.EnsureSuccessStatusCode();
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                List<string> nomsModeles = JsonConvert.DeserializeObject<List<string>>(content);
+                return nomsModeles;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<APIModel> getModelByName(string modelName)
+        {
+            var response = await client.GetAsync($"/getModelByName/{modelName}");
+            response.EnsureSuccessStatusCode();
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                APIModel model = JsonConvert.DeserializeObject<APIModel>(content);
+                return model;
+            }
+            else
+            {
+                return null;
+
+            }
+        }
+
         public async Task<List<(object[,], object[,])>> LoadTraningDataFromExcelFile()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -71,9 +107,13 @@ namespace ArduinoDOJO.Controller
             openFileDialog.Multiselect = false;
             openFileDialog.ShowDialog();
             string filePath = openFileDialog.FileName;
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return null;
+            }
             SpreadsheetGear.IWorkbook workbook = SpreadsheetGear.Factory.GetWorkbook(filePath);
-            object[,] matrixX = (object[,])workbook.Worksheets[0].Cells["A1:G16"].Value;
-            object[,] matrixY = (object[,])workbook.Worksheets[0].Cells["H1:H16"].Value;
+            object[,] matrixX = (object[,])workbook.Worksheets[0].Cells["A2:G81"].Value;
+            object[,] matrixY = (object[,])workbook.Worksheets[0].Cells["H2:H81"].Value;
 
             return new List<(object[,], object[,])> { (matrixX, matrixY) };
         }

@@ -40,7 +40,13 @@ namespace ArduinoDOJO
             InitializeComponent();
             matrixController = new MatrixController();
             sQLController = new SQLController();
+            InitializeCB_Models();
         }
+        private async void InitializeCB_Models()
+        {
+            CB_Models.ItemsSource = await sQLController.GetNomsModeles();
+        }
+
         private void InputSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (TB_InputCurrent != null)

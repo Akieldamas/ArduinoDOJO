@@ -15,7 +15,10 @@
         <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="10,10,0,10" Grid.RowSpan="2">
             <Button x:Name="BTN_Train" IsEnabled="True" Content="Train" Width="100" Height="30" Margin="0,0,0,10" Click="BTN_Train_Click"/>
             <Button x:Name="BTN_Predict" IsEnabled="False" Content="Predict" Width="100" Height="30" Margin="0,0,0,10" Click="BTN_Predict_Click"/>
-            <Button x:Name="BTN_Load" IsEnabled="True" Content="Load" Width="100" Height="30" Margin="0,0,0,10" Click="BTN_Load_Click"/>
+            <StackPanel Orientation="Horizontal">
+                <ComboBox x:Name="CB_Models" Width="138" Height="26"/>
+                <Button x:Name="BTN_Load" IsEnabled="True" Content="Load" Width="100" Height="30" Margin="5,0,0,0" HorizontalAlignment="Left" Click="BTN_Load_Click"/>
+            </StackPanel>
             <Button x:Name="BTN_Save" IsEnabled="False" Content="Save" Width="100" Height="30" Click="BTN_Save_Click"/>
         </StackPanel>
 

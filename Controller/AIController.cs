@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ArduinoDOJO.Controller
 {
@@ -92,6 +93,7 @@ namespace ArduinoDOJO.Controller
         public static List<DataModel> Predict(object[,] matrixX, int INPUT_SIZE, int HIDDEN_SIZE, double[,] GLOBALweight_ih, double[,] GLOBALweight_ho)
         {
             List<DataModel> predictDataList = new List<DataModel>();
+            MessageBox.Show(GLOBALweight_ih[0, 20].ToString());
 
             for (int row = 0; row < matrixX.GetLength(0); row++)
             {
