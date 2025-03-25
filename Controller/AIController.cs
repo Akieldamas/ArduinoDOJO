@@ -90,7 +90,7 @@ namespace ArduinoDOJO.Controller
 
             return iAModel;
         }
-        public static List<DataModel> Predict(object[,] matrixX, int INPUT_SIZE, int HIDDEN_SIZE, double[,] GLOBALweight_ih, double[,] GLOBALweight_ho)
+        public static List<DataModel> Predict(int[,] matrixX, int INPUT_SIZE, int HIDDEN_SIZE, double[,] GLOBALweight_ih, double[,] GLOBALweight_ho)
         {
             List<DataModel> predictDataList = new List<DataModel>();
             //MessageBox.Show(GLOBALweight_ih[0, 20].ToString());
