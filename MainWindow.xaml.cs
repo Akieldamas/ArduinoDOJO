@@ -98,6 +98,12 @@ namespace ArduinoDOJO
                 matrix = await sQLController.getEntrainement();
             }
 
+            if (matrix == null)
+            {
+                MessageBox.Show("Error loading data");
+                return;
+            }
+
             TrainingGrid.ItemsSource = null;
             TrainingGrid.Items.Clear();
             List<DataModel> dataList = new List<DataModel>();
