@@ -13,7 +13,7 @@ namespace ArduinoDOJO.Controller
     public class AIController
     {
         public AIController() { }
-        public static IAModel Training(object[,] matrixX, object[,] matrixY, int INPUT_SIZE, int HIDDEN_SIZE, int EPOCH, int OUTPUT_SIZE, double LEARNING_RATE)
+        public async Task<IAModel> Training(object[,] matrixX, object[,] matrixY, int INPUT_SIZE, int HIDDEN_SIZE, int EPOCH, int OUTPUT_SIZE, double LEARNING_RATE)
         {
             double[,] weights_ih = MatrixController.InitializeMatrix(HIDDEN_SIZE, INPUT_SIZE);
             double[,] weights_ho = MatrixController.InitializeMatrix(OUTPUT_SIZE, HIDDEN_SIZE);
@@ -90,7 +90,7 @@ namespace ArduinoDOJO.Controller
 
             return iAModel;
         }
-        public static List<DataModel> Predict(object[,] matrixX, int INPUT_SIZE, int HIDDEN_SIZE, double[,] GLOBALweight_ih, double[,] GLOBALweight_ho)
+        public async Task<List<DataModel>> Predict(int[,] matrixX, int INPUT_SIZE, int HIDDEN_SIZE, double[,] GLOBALweight_ih, double[,] GLOBALweight_ho)
         {
             List<DataModel> predictDataList = new List<DataModel>();
             //MessageBox.Show(GLOBALweight_ih[0, 20].ToString());

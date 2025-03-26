@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Ressources\load.gif" />
     <None Remove="Ressources\Matrices.xlsx" />
   </ItemGroup>
 
@@ -21,9 +22,13 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SpreadsheetGear" Version="9.3.30" />
     <PackageReference Include="SpreadsheetGear.Windows" Version="9.3.30" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Ressources\load.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Ressources\Matrices.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
