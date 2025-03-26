@@ -118,7 +118,8 @@ namespace ArduinoDOJO
 
             LoadingGif.Visibility = Visibility.Visible;
             MessageBox.Show("sup");
-            await Task.Run(async () => {
+            await Task.Run(async () =>
+            {
                 IAModel iaModel = await aiController.Training(matrix[0].Item1, matrix[0].Item2, INPUT_SIZE, HIDDEN_SIZE, EPOCH, OUTPUT_SIZE, LEARNING_RATE);
 
                 GLOBALweight_ho = iaModel.weights_ho;
@@ -142,9 +143,12 @@ namespace ArduinoDOJO
                     });
                 }
 
-            TrainingGrid.ItemsSource = null;
-            TrainingGrid.Items.Clear();
-            TrainingGrid.ItemsSource = emptyData;
+                TrainingGrid.ItemsSource = null;
+                TrainingGrid.Items.Clear();
+                TrainingGrid.ItemsSource = emptyData;
+                LoadingGif.Visibility = Visibility.Hidden;
+
+            });
         }
 
         private async void BTN_Predict_Click(object sender, RoutedEventArgs e)
@@ -166,26 +170,74 @@ namespace ArduinoDOJO
 
                     if (cellContent is TextBlock textBlock)
                     {
-                        trainingMatrix[i, j] = textBlock.Text;
+                        int value;
+                        if (int.TryParse(textBlock.Text, out value))
+                        {
+                            trainingMatrix[i, j] = value;
+                        }
+                        else
+                        {
+                            trainingMatrix[i, j] = 0; // or handle the error as needed
+                        }
                     }
                     else
                     {
-                        trainingMatrix[i, j] = cellContent?.ToString();
+                        trainingMatrix[i, j] = int.Parse(cellContent?.ToString());
                     }
                 }
             }
-            List<DataModel> predictDataList = AIController.Predict(trainingMatrix, INPUT_SIZE, HIDDEN_SIZE, GLOBALweight_ih, GLOBALweight_ho);
-            PredictGrid.ItemsSource = null;
-            PredictGrid.Items.Clear();
-            PredictGrid.ItemsSource = predictDataList;
+
+            LoadingGif.Visibility = Visibility.Visible;
+
+            await Task.Run(async () =>
+            {
+                List<DataModel> predictDataList = await aiController.Predict(trainingMatrix, INPUT_SIZE, HIDDEN_SIZE, GLOBALweight_ih, GLOBALweight_ho);
+                PredictGrid.ItemsSource = null;
+                PredictGrid.Items.Clear();
+                PredictGrid.ItemsSource = predictDataList;
+                LoadingGif.Visibility = Visibility.Hidden;
+
+            });
+            
         }
         private async void BTN_Load_Click(object sender, RoutedEventArgs e)
         {
             BTN_Load.IsEnabled = true;
+            BTN_Predict.IsEnabled = true;
+            BTN_Save.IsEnabled = true;
 
+            if (CB_Models.SelectedItem == null)
+            {
+                MessageBox.Show("Please choose a model");
+                return;
+            }
 
+            var reponse = await sQLController.getModelByName(CB_Models.SelectedItem.ToString());
 
-          //  List<> sQLController.LoadWeightsFromDB();
+            if (reponse != null)
+            {
+                GLOBALweight_ih = jsonFilter.FilterMatrixString(reponse.weights_ih);
+                GLOBALweight_ho = jsonFilter.FilterMatrixString(reponse.weights_ho);
+
+                int weights_Size = jsonFilter.GetWeightSize();
+
+                List<DataModel> emptyData = new List<DataModel>();
+
+                for (int i = 0; i < weights_Size; i++)
+                {
+                    emptyData.Add(new DataModel
+                    {
+                        Id = i + 1,
+                        X = 0,
+                        Y = 0,
+                        Esc = 0,
+                        Up = 0,
+                        Down = 0,
+                        Left = 0,
+                        Right = 0,
+                        Tag = 0
+                    });
+                }
 
                 TrainingGrid.ItemsSource = null;
                 TrainingGrid.Items.Clear();

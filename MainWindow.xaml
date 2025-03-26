@@ -3,14 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:gif="clr-namespace:WpfAnimatedGif;assembly=WpfAnimatedGif"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:local="clr-namespace:ArduinoDOJO"
         mc:Ignorable="d"
         Title="A-Mazing DOJO Trainer (c) 2025" Background="LightGray" Height="700" Width="1200">
     <Grid Margin="0,10,10,10" HorizontalAlignment="Right" Width="1180">
         <Grid.RowDefinitions>
-            <RowDefinition Height="281*"/>
-            <RowDefinition Height="383*"/>
+            <RowDefinition Height="67*"/>
+            <RowDefinition Height="99*"/>
         </Grid.RowDefinitions>
         <!-- Buttons on the left -->
         <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="10,40,0,10" Grid.RowSpan="2" Width="155">
@@ -74,7 +74,7 @@
 
         </StackPanel>
         <!-- Data display below -->
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0" Grid.Row="1">
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Height="400" Width="1180">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -129,7 +129,6 @@
                 </DataGrid>
             </StackPanel>
         </Grid>
-            <CheckBox x:Name="CB_mode" Content="Excel = false, DB = true" Height="50" Width="200"/>
-        <TextBox x:Name="TestBOx" HorizontalAlignment="Left" Margin="605,138,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Image x:Name="LoadingGif" gif:ImageBehavior.AnimatedSource="Ressources/load.gif" Margin="0,90,109,0" Visibility="Hidden"/>
     </Grid>
 </Window>
