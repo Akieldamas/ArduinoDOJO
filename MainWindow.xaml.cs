@@ -43,8 +43,6 @@ namespace ArduinoDOJO
             InitializeComponent();
             matrixController = new MatrixController();
             sQLController = new SQLController();
-            jsonFilter = new JsonFilter();
-            aiController = new AIController();
             InitializeCB_Models();
         }
         private async void InitializeCB_Models()
@@ -100,12 +98,6 @@ namespace ArduinoDOJO
                 matrix = await sQLController.getEntrainement();
             }
 
-            if (matrix == null)
-            {
-                MessageBox.Show("Error LoadingGifGif data");
-                return;
-            }
-
             TrainingGrid.ItemsSource = null;
             TrainingGrid.Items.Clear();
             List<DataModel> dataList = new List<DataModel>();
@@ -150,12 +142,9 @@ namespace ArduinoDOJO
                     });
                 }
 
-                TrainingGrid.ItemsSource = null;
-                TrainingGrid.Items.Clear();
-                TrainingGrid.ItemsSource = emptyData;
-                LoadingGif.Visibility = Visibility.Hidden;
-
-            });
+            TrainingGrid.ItemsSource = null;
+            TrainingGrid.Items.Clear();
+            TrainingGrid.ItemsSource = emptyData;
         }
 
         private async void BTN_Predict_Click(object sender, RoutedEventArgs e)
@@ -177,72 +166,26 @@ namespace ArduinoDOJO
 
                     if (cellContent is TextBlock textBlock)
                     {
-                        int value;
-                        if (int.TryParse(textBlock.Text, out value))
-                        {
-                            trainingMatrix[i, j] = value;
-                        }
-                        else
-                        {
-                            trainingMatrix[i, j] = 0; // or handle the error as needed
-                        }
+                        trainingMatrix[i, j] = textBlock.Text;
                     }
                     else
                     {
-                        trainingMatrix[i, j] = int.Parse(cellContent?.ToString());
+                        trainingMatrix[i, j] = cellContent?.ToString();
                     }
                 }
             }
-            
-            await Task.Run(async () => {
-                List<DataModel> predictDataList = await aiController.Predict(trainingMatrix, INPUT_SIZE, HIDDEN_SIZE, GLOBALweight_ih, GLOBALweight_ho);
-                PredictGrid.ItemsSource = null;
-                PredictGrid.Items.Clear();
-                PredictGrid.ItemsSource = predictDataList;
-                LoadingGif.Visibility = Visibility.Hidden;
-
-            });
-
-            
+            List<DataModel> predictDataList = AIController.Predict(trainingMatrix, INPUT_SIZE, HIDDEN_SIZE, GLOBALweight_ih, GLOBALweight_ho);
+            PredictGrid.ItemsSource = null;
+            PredictGrid.Items.Clear();
+            PredictGrid.ItemsSource = predictDataList;
         }
         private async void BTN_Load_Click(object sender, RoutedEventArgs e)
         {
             BTN_Load.IsEnabled = true;
-            BTN_Predict.IsEnabled = true;
-            BTN_Save.IsEnabled = true;
 
-            if (CB_Models.SelectedItem == null)
-            {
-                MessageBox.Show("Please choose a model");
-                return;
-            }
 
-            var reponse = await sQLController.getModelByName(CB_Models.SelectedItem.ToString());
 
-            if (reponse != null)
-            {
-                GLOBALweight_ih = jsonFilter.FilterMatrixString(reponse.weights_ih);
-                GLOBALweight_ho = jsonFilter.FilterMatrixString(reponse.weights_ho);
-
-                int weights_Size = jsonFilter.GetWeightSize();
-
-                List<DataModel> emptyData = new List<DataModel>();
-
-                for (int i = 0; i < weights_Size; i++)
-                {
-                    emptyData.Add(new DataModel
-                    {
-                        Id = i + 1,
-                        X = 0,
-                        Y = 0,
-                        Esc = 0,
-                        Up = 0,
-                        Down = 0,
-                        Left = 0,
-                        Right = 0,
-                        Tag = 0
-                    });
-                }
+          //  List<> sQLController.LoadWeightsFromDB();
 
                 TrainingGrid.ItemsSource = null;
                 TrainingGrid.Items.Clear();
@@ -267,6 +210,7 @@ namespace ArduinoDOJO
 
             var jsonData = JsonConvert.SerializeObject(data);
             sQLController.SaveDataAsync($"Model_{date}", GLOBALweight_ih, GLOBALweight_ho);
+
         }
     }
 }

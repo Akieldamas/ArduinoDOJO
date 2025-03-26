@@ -74,7 +74,7 @@
 
         </StackPanel>
         <!-- Data display below -->
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Height="380" Width="1180">
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -129,8 +129,7 @@
                 </DataGrid>
             </StackPanel>
         </Grid>
-
-        <Image x:Name="LoadingGif" gif:ImageBehavior.AnimatedSource="Ressources/load.gif" Margin="245,108,233,0" Visibility="Hidden"/>
-
+            <CheckBox x:Name="CB_mode" Content="Excel = false, DB = true" Height="50" Width="200"/>
+        <TextBox x:Name="TestBOx" HorizontalAlignment="Left" Margin="605,138,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
     </Grid>
 </Window>
