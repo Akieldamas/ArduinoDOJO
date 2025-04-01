@@ -13,7 +13,7 @@ namespace ArduinoDOJO.Controller
     public class AIController
     {
         public AIController() { }
-        public async Task<IAModel> Training(int[,] matrixX, int[,] matrixY, int INPUT_SIZE, int HIDDEN_SIZE, int EPOCH, int OUTPUT_SIZE, double LEARNING_RATE)
+        public async Task<IAModel> Training(object[,] matrixX, object[,] matrixY, int INPUT_SIZE, int HIDDEN_SIZE, int EPOCH, int OUTPUT_SIZE, double LEARNING_RATE)
         {
             double[,] weights_ih = MatrixController.InitializeMatrix(HIDDEN_SIZE, INPUT_SIZE);
             double[,] weights_ho = MatrixController.InitializeMatrix(OUTPUT_SIZE, HIDDEN_SIZE);

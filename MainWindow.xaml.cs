@@ -36,7 +36,7 @@ namespace ArduinoDOJO
         int INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE, EPOCH;
         double LEARNING_RATE;
 
-        List<(int[,], int[,])> matrix = new List<(int[,], int[,])>();
+        List<(object[,], object[,])> matrix = new List<(object[,], object[,])>();
 
         public MainWindow()
         {
