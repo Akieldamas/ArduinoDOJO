@@ -114,6 +114,10 @@ namespace ArduinoDOJO.Controller
             SpreadsheetGear.IWorkbook workbook = SpreadsheetGear.Factory.GetWorkbook(filePath);
             object[,] matrixX = (object[,])workbook.Worksheets[0].Cells["A2:G81"].Value;
             object[,] matrixY = (object[,])workbook.Worksheets[0].Cells["H2:H81"].Value;
+            if (matrixX == null || matrixY == null)
+            {
+                throw new Exception("Error loading Excel data! Please check the file format.");
+            }
 
             return new List<(object[,], object[,])> { (matrixX, matrixY) };
         }

@@ -36,14 +36,19 @@ namespace ArduinoDOJO
         int INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE, EPOCH;
         double LEARNING_RATE;
 
-        List<(object[,], object[,])> matrix = new List<(object[,], object[,])>();
+        bool TrainCancelled = false;
+
+        List<(object[,], object[,])> matrix;
 
         public MainWindow()
         {
             InitializeComponent();
             matrixController = new MatrixController();
+            aiController = new AIController();
             sQLController = new SQLController();
             InitializeCB_Models();
+
+            matrix = new List<(object[,], object[,])>();
         }
         private async void InitializeCB_Models()
         {
@@ -104,8 +109,6 @@ namespace ArduinoDOJO
                 return;
             }
 
-            TrainingGrid.ItemsSource = null;
-            TrainingGrid.Items.Clear();
             List<DataModel> dataList = new List<DataModel>();
 
             for (int j = 0; j < matrix[0].Item1.GetLength(0); j++)
@@ -123,9 +126,21 @@ namespace ArduinoDOJO
             }
 
             LoadingGif.Visibility = Visibility.Visible;
+            BTN_Cancel.Visibility = Visibility.Visible;
+            
+
             MessageBox.Show("sup");
             await Task.Run(async () =>
             {
+                await Task.Delay(3000);
+                if (TrainCancelled)
+                {
+                    LoadingGif.Visibility = Visibility.Hidden;
+                    MessageBox.Show("Training cancelled");
+                    return;
+                }
+                Dispatcher.Invoke(() => BTN_Cancel.Visibility = Visibility.Hidden);
+
                 IAModel iaModel = await aiController.Training(matrix[0].Item1, matrix[0].Item2, INPUT_SIZE, HIDDEN_SIZE, EPOCH, OUTPUT_SIZE, LEARNING_RATE);
 
                 GLOBALweight_ho = iaModel.weights_ho;
@@ -149,16 +164,25 @@ namespace ArduinoDOJO
                     });
                 }
 
-                TrainingGrid.ItemsSource = null;
-                TrainingGrid.Items.Clear();
-                TrainingGrid.ItemsSource = emptyData;
-                LoadingGif.Visibility = Visibility.Hidden;
-
+                Dispatcher.Invoke(() =>
+                {
+                    TrainingGrid.ItemsSource = null;
+                    TrainingGrid.Items.Clear();
+                    TrainingGrid.ItemsSource = emptyData;
+                    LoadingGif.Visibility = Visibility.Hidden;
+                });
+                TrainCancelled = false;
             });
+        }
+
+        private void BTN_Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            TrainCancelled = true;
         }
 
         private async void BTN_Predict_Click(object sender, RoutedEventArgs e)
         {
+            BTN_Cancel.Visibility = Visibility.Hidden;
             INPUT_SIZE = (int)InputSlider.Value;
             HIDDEN_SIZE = (int)HiddenSlider.Value;
 
@@ -198,10 +222,15 @@ namespace ArduinoDOJO
             await Task.Run(async () =>
             {
                 List<DataModel> predictDataList = await aiController.Predict(trainingMatrix, INPUT_SIZE, HIDDEN_SIZE, GLOBALweight_ih, GLOBALweight_ho);
-                PredictGrid.ItemsSource = null;
-                PredictGrid.Items.Clear();
-                PredictGrid.ItemsSource = predictDataList;
-                LoadingGif.Visibility = Visibility.Hidden;
+
+                Dispatcher.Invoke(() =>
+                {
+                    PredictGrid.ItemsSource = null;
+                    PredictGrid.Items.Clear();
+                    PredictGrid.ItemsSource = predictDataList;
+                    LoadingGif.Visibility = Visibility.Hidden;
+                });
+                
 
             });
             
