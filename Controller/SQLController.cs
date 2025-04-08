@@ -18,7 +18,7 @@ namespace ArduinoDOJO.Controller
         HttpClient client = new HttpClient();
         public SQLController()
         {
-            client.BaseAddress = new Uri("https://guerraz.alwaysdata.net");
+            client.BaseAddress = new Uri("https://este.alwaysdata.net");
         }
 
         public async Task SaveDataAsync(string name, double[,] GLOBALweight_ih, double[,] GLOBALweight_ho)
@@ -67,18 +67,25 @@ namespace ArduinoDOJO.Controller
 
         public async Task<List<string>> GetNomsModeles()
         {
-
-            var response = await client.GetAsync("/getAllModelNames");
-            response.EnsureSuccessStatusCode();
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var content = await response.Content.ReadAsStringAsync();
-                List<string> nomsModeles = JsonConvert.DeserializeObject<List<string>>(content);
-                return nomsModeles;
+                var response = await client.GetAsync("/getAllModelNames");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    List<string> nomsModeles = JsonConvert.DeserializeObject<List<string>>(content);
+                    return nomsModeles;
+                }
+                else
+                {
+                    // Handle different status codes here
+                    return null;
+                }
             }
-            else
+            catch (HttpRequestException e)
             {
+                // Log the exception or handle it accordingly
+                Console.WriteLine($"Request error: {e.Message}");
                 return null;
             }
         }
