@@ -46,6 +46,7 @@ namespace ArduinoDOJO
             matrixController = new MatrixController();
             aiController = new AIController();
             sQLController = new SQLController();
+
             InitializeCB_Models();
 
             matrix = new List<(object[,], object[,])>();
@@ -127,9 +128,7 @@ namespace ArduinoDOJO
 
             LoadingGif.Visibility = Visibility.Visible;
             BTN_Cancel.Visibility = Visibility.Visible;
-            
 
-            MessageBox.Show("sup");
             await Task.Run(async () =>
             {
                 await Task.Delay(3000);

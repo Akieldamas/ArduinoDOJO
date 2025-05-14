@@ -16,13 +16,43 @@ namespace ArduinoDOJO.Controller
     public class SQLController
     {
         HttpClient client = new HttpClient();
+        private readonly string loginUsername = "darklion84";
+        private readonly string loginPassword = "N4rT7kA2vL9pQwX3";
+
+        string authToken = "";
+
         public SQLController()
         {
             client.BaseAddress = new Uri("https://este.alwaysdata.net");
         }
+        private async Task loginToAPI()
+        {
+            var body = new
+            {
+                username = loginUsername,
+                password = loginPassword
+            };
+
+            string json = JsonConvert.SerializeObject(body);
+
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                var response = await client.PostAsync("/login", content);
+                response.EnsureSuccessStatusCode();
+                if (response.IsSuccessStatusCode)
+                {
+                    authToken = await response.Content.ReadAsStringAsync();
+                    tokenModel token = JsonConvert.DeserializeObject<tokenModel>(authToken);
+                    authToken = token.token;
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+                }
+            }
+        }
 
         public async Task SaveDataAsync(string name, double[,] GLOBALweight_ih, double[,] GLOBALweight_ho)
         {
+            await loginToAPI();
+
             var data = new
             {
                 model_name = name,
@@ -50,6 +80,8 @@ namespace ArduinoDOJO.Controller
         }
         public async Task<double[,]> LoadTraningDataFromDB()
         {
+            await loginToAPI();
+
             var response = await client.GetAsync("/GetModel");
             response.EnsureSuccessStatusCode();
             if (response.IsSuccessStatusCode)
@@ -67,6 +99,8 @@ namespace ArduinoDOJO.Controller
 
         public async Task<List<string>> GetNomsModeles()
         {
+            await loginToAPI();
+
             try
             {
                 var response = await client.GetAsync("/getAllModelNames");
@@ -92,6 +126,8 @@ namespace ArduinoDOJO.Controller
 
         public async Task<APIModel> getModelByName(string modelName)
         {
+            await loginToAPI();
+
             var response = await client.GetAsync($"/getModelByName/{modelName}");
             response.EnsureSuccessStatusCode();
             if (response.IsSuccessStatusCode)
@@ -131,6 +167,8 @@ namespace ArduinoDOJO.Controller
 
         public async Task<List<APIModel>> getAllModelNames()
         {
+            await loginToAPI();
+
             var response = await client.GetAsync("/getAllModels");
             response.EnsureSuccessStatusCode();
             if (response.IsSuccessStatusCode)
@@ -147,6 +185,8 @@ namespace ArduinoDOJO.Controller
         }
         public async Task<APIModel> getModelByName()
         {
+            await loginToAPI();
+
             var response = await client.GetAsync("/getModelByName");
             response.EnsureSuccessStatusCode();
             if (response.IsSuccessStatusCode)
@@ -163,6 +203,8 @@ namespace ArduinoDOJO.Controller
         }
         public async Task<List<(object[,], object[,])>> getEntrainement()
         {
+            await loginToAPI();
+
             var response = await client.GetAsync("/getAllEntrainements");
             response.EnsureSuccessStatusCode();
             if (response.IsSuccessStatusCode)
