@@ -190,31 +190,34 @@ namespace ArduinoDOJO
 
             int[,] trainingMatrix = new int[rowCount, columnCount];
 
-            for (int i = 0; i < rowCount; i++)
+            for (int i = 0; i < TrainingGrid.Items.Count; i++)
             {
-                var row = TrainingGrid.Items[i];
-                for (int j = 0; j < columnCount; j++)
+                var row = TrainingGrid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
+                if (row == null)
+                {
+                    TrainingGrid.UpdateLayout();
+                    TrainingGrid.ScrollIntoView(TrainingGrid.Items[i]);
+                    row = TrainingGrid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
+                }
+
+                for (int j = 0; j < TrainingGrid.Columns.Count; j++)
                 {
                     var cellContent = TrainingGrid.Columns[j].GetCellContent(row);
-
-                    if (cellContent is TextBlock textBlock)
+                    if (cellContent is TextBlock tb && int.TryParse(tb.Text, out int value))
                     {
-                        int value;
-                        if (int.TryParse(textBlock.Text, out value))
-                        {
-                            trainingMatrix[i, j] = value;
-                        }
-                        else
-                        {
-                            trainingMatrix[i, j] = 0; // or handle the error as needed
-                        }
+                        trainingMatrix[i, j] = value;
+                    }
+                    else if (cellContent is TextBox tbx && int.TryParse(tbx.Text, out int value2))
+                    {
+                        trainingMatrix[i, j] = value2;
                     }
                     else
                     {
-                        trainingMatrix[i, j] = int.Parse(cellContent?.ToString());
+                        trainingMatrix[i, j] = 0;
                     }
                 }
             }
+
 
             LoadingGif.Visibility = Visibility.Visible;
 
