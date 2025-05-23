@@ -46,6 +46,7 @@ namespace ArduinoDOJO
             matrixController = new MatrixController();
             aiController = new AIController();
             sQLController = new SQLController();
+            jsonFilter = new JsonFilter();
 
             InitializeCB_Models();
 
@@ -126,6 +127,9 @@ namespace ArduinoDOJO
                 });
             }
 
+            InputGrid.ItemsSource = null;
+            InputGrid.Items.Clear();
+            InputGrid.ItemsSource = dataList;
             LoadingGif.Visibility = Visibility.Visible;
             BTN_Cancel.Visibility = Visibility.Visible;
 
@@ -190,34 +194,19 @@ namespace ArduinoDOJO
 
             int[,] trainingMatrix = new int[rowCount, columnCount];
 
-            for (int i = 0; i < TrainingGrid.Items.Count; i++)
+            for (int i = 0; i < rowCount; i++)
             {
-                var row = TrainingGrid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
-                if (row == null)
+                if (TrainingGrid.Items[i] is DataModel data)
                 {
-                    TrainingGrid.UpdateLayout();
-                    TrainingGrid.ScrollIntoView(TrainingGrid.Items[i]);
-                    row = TrainingGrid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
-                }
-
-                for (int j = 0; j < TrainingGrid.Columns.Count; j++)
-                {
-                    var cellContent = TrainingGrid.Columns[j].GetCellContent(row);
-                    if (cellContent is TextBlock tb && int.TryParse(tb.Text, out int value))
-                    {
-                        trainingMatrix[i, j] = value;
-                    }
-                    else if (cellContent is TextBox tbx && int.TryParse(tbx.Text, out int value2))
-                    {
-                        trainingMatrix[i, j] = value2;
-                    }
-                    else
-                    {
-                        trainingMatrix[i, j] = 0;
-                    }
+                    trainingMatrix[i, 0] = data.X;
+                    trainingMatrix[i, 1] = data.Y;
+                    trainingMatrix[i, 2] = data.Esc;
+                    trainingMatrix[i, 3] = data.Up;
+                    trainingMatrix[i, 4] = data.Down;
+                    trainingMatrix[i, 5] = data.Right;
+                    trainingMatrix[i, 6] = data.Left;
                 }
             }
-
 
             LoadingGif.Visibility = Visibility.Visible;
 

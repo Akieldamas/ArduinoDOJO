@@ -179,7 +179,7 @@
         <!-- ComboBox Style -->
         <Style x:Key="ModernComboBox" TargetType="ComboBox">
             <Setter Property="Background" Value="{StaticResource PanelBackground}"/>
-            <Setter Property="Foreground" Value="{StaticResource PrimaryText}"/>
+            <Setter Property="Foreground" Value="#2D2D30"/>
             <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="8,4"/>
