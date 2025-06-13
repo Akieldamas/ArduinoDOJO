@@ -16,14 +16,14 @@ namespace ArduinoDOJO.Controller
     public class SQLController
     {
         HttpClient client = new HttpClient();
-        private readonly string loginUsername = "darklion84";
-        private readonly string loginPassword = "N4rT7kA2vL9pQwX3";
+        private readonly string loginUsername = "";
+        private readonly string loginPassword = "";
 
         string authToken = "";
 
         public SQLController()
         {
-            client.BaseAddress = new Uri("https://este.alwaysdata.net");
+            client.BaseAddress = new Uri("");
         }
         private async Task loginToAPI()
         {
